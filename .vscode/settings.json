@@ -1,0 +1,8 @@
+{
+    "explorer.compactFolders": false,
+    "FSharp.suggestGitignore": false,
+    "[csharp]": {
+        "editor.maxTokenizationLineLength": 2500,
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    }
+}
