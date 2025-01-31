@@ -20,4 +20,19 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void AddRoute_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void SearchRoute_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void ImportCsv_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
 }

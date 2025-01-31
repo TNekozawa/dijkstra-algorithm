@@ -5,8 +5,95 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Viewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="経路探索アプリ"
+        Height="600"
+        Width="800"
+        Background="{x:Static SystemColors.ControlBrush}">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- 経路入力セクション -->
+        <Border Grid.Row="0"
+                BorderBrush="{x:Static SystemColors.ControlDarkBrush}"
+                BorderThickness="1"
+                Margin="0,0,0,10"
+                Padding="10">
+            <StackPanel Orientation="Horizontal">
+
+                <TextBox x:Name="fromLocationTextBox"
+                         Width="120"
+                         Margin="5"
+                         VerticalContentAlignment="Center"
+                         Text="出発地"/>
+
+                <TextBox x:Name="toLocationTextBox"
+                         Width="120"
+                         Margin="5"
+                         VerticalContentAlignment="Center"
+                         Text="目的地"/>
+
+                <TextBox x:Name="timeTextBox"
+                         Width="100"
+                         Margin="5"
+                         VerticalContentAlignment="Center"
+                         Text="所要時間(分)"/>
+
+                <TextBox x:Name="costTextBox"
+                         Width="100"
+                         Margin="5"
+                         VerticalContentAlignment="Center"
+                         Text="費用(円)"/>
+
+                <Button Content="経路追加"
+                        Click="AddRoute_Click"
+                        Margin="5"
+                        Padding="10,5"/>
+                <Button Content="CSVインポート"
+                        Click="ImportCsv_Click"
+                        Margin="5"
+                        Padding="10,5"/>
+            </StackPanel>
+        </Border>
+
+        <!-- データグリッド -->
+        <DataGrid Grid.Row="1"
+                  x:Name="routeDataGrid"
+                  AutoGenerateColumns="False"
+                  AlternatingRowBackground="{x:Static SystemColors.ControlLightBrush}"
+                  GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="出発地"
+                                    Binding="{Binding FromLocation}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="目的地"
+                                    Binding="{Binding ToLocation}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="所要時間(分)"
+                                    Binding="{Binding TravelTime}"
+                                    Width="Auto"/>
+                <DataGridTextColumn Header="費用(円)"
+                                    Binding="{Binding Cost}"
+                                    Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- 検索ボタン -->
+        <Button Grid.Row="2"
+                Content="経路検索"
+                Click="SearchRoute_Click"
+                HorizontalAlignment="Center"
+                Margin="0,10,0,10"
+                Padding="20,5"/>
+
+        <!-- 結果表示 -->
+        <RichTextBox Grid.Row="3"
+                     x:Name="resultRichTextBox"
+                     IsReadOnly="True"
+                     VerticalScrollBarVisibility="Auto"/>
     </Grid>
 </Window>
