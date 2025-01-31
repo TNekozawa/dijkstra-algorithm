@@ -1,8 +1,58 @@
 {
     "explorer.compactFolders": false,
     "FSharp.suggestGitignore": false,
+    "editor.renderWhitespace": "all",
     "[csharp]": {
         "editor.maxTokenizationLineLength": 2500,
         "editor.defaultFormatter": "ms-dotnettools.csharp"
+    },
+    "todo-tree.general.tags": [
+        "FIXME",
+        "NOTE",
+        "TODO",
+        "CHECK",
+        "BUG",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.highlights.defaultHighlight": {
+        "gutterIcon": true
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check-circle",
+            "foreground": "#e99415",
+            "iconColour": "#e99415"
+        },
+        "FIXME": {
+            "icon": "flame",
+            "foreground": "#c43333",
+            "iconColour": "#c43333"
+        },
+        "NOTE": {
+            "icon": "paintbrush",
+            "foreground": "#00bfff",
+            "iconColour": "#00bfff"
+        },
+        "CHECK": {
+            "icon": "plus-circle",
+            "foreground": "#1dbe33e8",
+            "iconColour": "#1dbe33e8"
+        },
+        "BUG": {
+            "icon": "bug",
+            "foreground": "#c43333",
+            "iconColour": "#c43333"
+        },
+        "[ ]": {
+            "icon": "issue-draft",
+            "foreground": "#c43333",
+            "iconColour": "#c43333"
+        },
+        "[x]": {
+            "icon": "issue-closed",
+            "foreground": "#1dbe33e8",
+            "iconColour": "#1dbe33e8"
+        }
     }
 }
