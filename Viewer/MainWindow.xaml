@@ -53,6 +53,7 @@
                         Click="AddRoute_Click"
                         Margin="5"
                         Padding="10,5"/>
+
                 <Button Content="CSVインポート"
                         Click="ImportCsv_Click"
                         Margin="5"
@@ -82,13 +83,34 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- 検索ボタン -->
-        <Button Grid.Row="2"
-                Content="経路検索"
-                Click="SearchRoute_Click"
-                HorizontalAlignment="Center"
-                Margin="0,10,0,10"
-                Padding="20,5"/>
+        <!-- 検索オプションと検索ボタン -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="10">
+
+            <!-- 検索モードスライダー -->
+            <StackPanel Orientation="Vertical"
+                        Margin="0,0,20,0"
+                        Width="150">
+                <TextBlock Text="所要時間                    金額"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,5"/>
+                <Slider x:Name="searchModeSlider"
+                        Minimum="0"
+                        Maximum="1"
+                        Value="0"
+                        TickPlacement="BottomRight"
+                        TickFrequency="1"
+                        IsSnapToTickEnabled="True"/>
+            </StackPanel>
+
+            <!-- 検索ボタン -->
+            <Button Content="経路検索"
+                    Click="SearchRoute_Click"
+                    Padding="20,5"/>
+        </StackPanel>
 
         <!-- 結果表示 -->
         <RichTextBox Grid.Row="3"
