@@ -37,17 +37,23 @@
                          VerticalContentAlignment="Center"
                          Text="目的地"/>
 
-                <TextBox x:Name="timeTextBox"
-                         Width="100"
+                <TextBox x:Name="transportationTypeTextBox"
+                         Width="90"
                          Margin="5"
                          VerticalContentAlignment="Center"
-                         Text="所要時間(分)"/>
+                         Text="交通手段"/>
 
                 <TextBox x:Name="costTextBox"
-                         Width="100"
+                         Width="90"
                          Margin="5"
                          VerticalContentAlignment="Center"
                          Text="費用(円)"/>
+
+                <TextBox x:Name="timeTextBox"
+                         Width="90"
+                         Margin="5"
+                         VerticalContentAlignment="Center"
+                         Text="所要時間(分)"/>
 
                 <Button Content="経路追加"
                         Click="AddRoute_Click"
@@ -74,11 +80,14 @@
                 <DataGridTextColumn Header="目的地"
                                     Binding="{Binding ToLocation}"
                                     Width="*"/>
-                <DataGridTextColumn Header="所要時間(分)"
-                                    Binding="{Binding TravelTime}"
+                <DataGridTextColumn Header="交通手段"
+                                    Binding="{Binding TransportationType}"
                                     Width="Auto"/>
                 <DataGridTextColumn Header="費用(円)"
                                     Binding="{Binding Cost}"
+                                    Width="Auto"/>
+                <DataGridTextColumn Header="所要時間(分)"
+                                    Binding="{Binding TravelTime}"
                                     Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>

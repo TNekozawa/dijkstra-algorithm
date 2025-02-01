@@ -2,6 +2,9 @@
     "explorer.compactFolders": false,
     "FSharp.suggestGitignore": false,
     "editor.renderWhitespace": "all",
+    "[csv]": {
+        "files.encoding": "shiftjis"
+    },
     "[csharp]": {
         "editor.maxTokenizationLineLength": 2500,
         "editor.defaultFormatter": "ms-dotnettools.csharp"
