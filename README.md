@@ -13,4 +13,6 @@ dotnet sln add Viewer/Viewer.csproj
 dotnet add Controller/Controller.csproj reference Models/Models.csproj
 dotnet add Viewer/Viewer.csproj reference Models/Models.csproj
 dotnet add Viewer/Viewer.csproj reference Controller/Controller.csproj
+
+dotnet add Controller/Controller.csproj package System.Text.Encoding.CodePages
 ```
