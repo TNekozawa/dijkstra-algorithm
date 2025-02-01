@@ -115,6 +115,22 @@
                         IsSnapToTickEnabled="True"/>
             </StackPanel>
 
+            <!-- 経路探索の開始場所と目的地 -->
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,0,20,0"
+                        Width="300">
+                <ListBox x:Name="fromSelectionListBox"
+                       Width="100"/>
+                <TextBlock Text="から"
+                       HorizontalAlignment="Center"
+                       Margin="10,13,0,10"/>
+                <ListBox x:Name="toSelectionListBox"
+                       Width="100"/>
+                <TextBlock Text="まで"
+                       HorizontalAlignment="Center"
+                       Margin="10,13,0,10"/>
+            </StackPanel>
+
             <!-- 検索ボタン -->
             <Button Content="経路検索"
                     Click="SearchRoute_Click"
