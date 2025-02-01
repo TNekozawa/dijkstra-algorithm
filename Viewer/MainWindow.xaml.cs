@@ -1,4 +1,5 @@
-﻿using Controller.Utils;
+﻿using Controller;
+using Controller.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace Viewer
     public partial class MainWindow : Window
     {
         public ObservableCollection<RouteEntry> Routes { get; private set; }
+        public DijkstraInterface DijkstraInterface { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
             Routes = [];
+            DijkstraInterface = new();
             routeDataGrid.ItemsSource = Routes;
             DataContext = this;
         }
@@ -29,8 +32,8 @@ namespace Viewer
                 FromLocation = fromLocationTextBox.Text,
                 ToLocation = toLocationTextBox.Text,
                 TransType = transportationTypeTextBox.Text,
-                TravelTime = decimal.TryParse(timeTextBox.Text, out decimal time) ? time : 0,
-                Cost = decimal.TryParse(costTextBox.Text, out decimal cost) ? cost : 0
+                TravelTime = int.TryParse(timeTextBox.Text, out int time) ? time : 0,
+                Cost = int.TryParse(costTextBox.Text, out int cost) ? cost : 0
             };
 
             Routes.Add(newRoute);
@@ -46,6 +49,24 @@ namespace Viewer
         private void SearchRoute_Click(object sender, RoutedEventArgs e)
         {
             // TODO 実装
+            List<string[]> routes = [];
+            foreach (var route in Routes)
+            {
+                string[] array = new string[route.Length];
+                array[0] = route.FromLocation.ToString();
+                array[1] = route.ToLocation.ToString();
+                array[2] = route.TransType.ToString();
+                array[3] = route.TravelTime.ToString();
+                array[4] = route.Cost.ToString();
+
+                routes.Add(array);
+            }
+
+            DijkstraInterface.SetCsv(routes);
+            
+            string fromName = fromSelectionListBox.SelectedItem.ToString();
+            string toName = toSelectionListBox.SelectedItem.ToString();
+            DijkstraInterface.GetPath(fromName, toName);
         }
 
         private void ImportCsv_Click(object sender, RoutedEventArgs e)
@@ -77,8 +98,8 @@ namespace Viewer
                             FromLocation = fromName,
                             ToLocation = toName,
                             TransType = transType,
-                            TravelTime = decimal.TryParse(routeTime, out decimal time) ? time : 0,
-                            Cost = decimal.TryParse(routeCost, out decimal cost) ? cost : 0
+                            TravelTime = int.TryParse(routeTime, out int time) ? time : 0,
+                            Cost = int.TryParse(routeCost, out int cost) ? cost : 0
                         };
 
                         Routes.Add(newRoute);
@@ -103,6 +124,7 @@ namespace Viewer
 
     public class RouteEntry : INotifyPropertyChanged
     {
+        public readonly int Length = 5;
         private string _fromLocation;
         public string FromLocation
         {
@@ -136,8 +158,8 @@ namespace Viewer
             }
         }
 
-        private decimal _travelTime;
-        public decimal TravelTime
+        private int _travelTime;
+        public int TravelTime
         {
             get => _travelTime;
             set
@@ -147,8 +169,8 @@ namespace Viewer
             }
         }
 
-        private decimal _cost;
-        public decimal Cost
+        private int _cost;
+        public int Cost
         {
             get => _cost;
             set

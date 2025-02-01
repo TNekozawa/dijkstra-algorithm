@@ -9,11 +9,13 @@ namespace Models
     public class DijkstraProcessor
     {
         public Dictionary<int, Location> LocationDictionary { get; private set; }
+        private Dictionary<string, int> LocNameDictionary;
         public DijkstraAlgorithm DijkstraAlgorithm { get; private set; }
 
         public DijkstraProcessor()
         {
             LocationDictionary = [];
+            LocNameDictionary = [];
             DijkstraAlgorithm = new();
         }
         public void SetLocDict(List<string[]> csv)
@@ -23,13 +25,17 @@ namespace Models
             foreach (Location location in LocationDictionary.Values)
             {
                 int id = location.Id;
+                string name = location.Name;
                 nodeDict[id] = location as AbstractNode;
+                LocNameDictionary[name] = id;
             }
             DijkstraAlgorithm.SetNodeDict(nodeDict);
         }
-        public void Process(int startId)
+        public void Process(string fromLocation, string toLocation)
         {
-            DijkstraAlgorithm.Process(startId);
+            int startId = LocNameDictionary[fromLocation];
+            int endId = LocNameDictionary[toLocation];
+            DijkstraAlgorithm.Process(startId, endId);
         }
     }
 }

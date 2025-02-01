@@ -6,8 +6,7 @@ namespace Controller
 {
     public class DijkstraInterface
     {
-        public string? csvPath { get; private set; }
-        private List<string[]>? csv;
+        private List<string[]>? DataArray;
         private DijkstraProcessor processor;
         public DijkstraInterface()
         {
@@ -16,28 +15,26 @@ namespace Controller
         }
         private void Initialize()
         {
-            csvPath = null;
-            csv = null;
+            DataArray = null;
             processor = new();
         }
 
-        public void SetCsv(string csvPath)
+        public void SetCsv(List<string[]> csv)
         {
             Initialize();
-            this.csvPath = csvPath;
-            csv = CsvReader.GetCSV(csvPath, false);
+            DataArray = csv;
         }
 
-        public void GetPath(int startId)
+        public void GetPath(string fromLocation, string toLocation)
         {
-            if (csv == null)
+            if (DataArray == null)
             {
                 // 処理なし
             }
             else
             {
-                processor.SetLocDict(csv);
-                processor.Process(startId);
+                processor.SetLocDict(DataArray);
+                processor.Process(fromLocation, toLocation);
             }
         }
     }

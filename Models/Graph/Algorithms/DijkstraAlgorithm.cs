@@ -31,13 +31,18 @@ namespace Models.Graph.Algorithms
             SortedQueue.Sort();
         }
 
-        public void Process(int startId)
+        public void Process(int startId, int endId)
         {
             InitializeProcessor(startId);
             while (SortedQueue.Count() > 0)
             {
                 AbstractNode node = SortedQueue.Pop();
                 node.SetDecision(true);
+                if (node.Id == endId)
+                {
+                    break;
+                }
+
                 double nowCost = node.Cost;
                 foreach (AbstractEdge edge in node.EdgeList)
                 {
