@@ -1,6 +1,6 @@
 ﻿using Controller;
-using Controller.Utils;
 using Microsoft.Win32;
+using Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,7 +48,32 @@ namespace Viewer
 
         private void SearchRoute_Click(object sender, RoutedEventArgs e)
         {
-            // TODO 実装
+            string fromName;
+            var fSelectedItem = fromSelectionListBox.SelectedItem;
+            if (fSelectedItem == null)
+            {
+                // スタート地点が指定されていない
+                fromSelectionListBox.SelectedIndex = 0;
+                fromName = fromSelectionListBox.Items[0].ToString();
+            }
+            else
+            {
+                fromName = fSelectedItem.ToString();
+            }
+
+            string toName;
+            var tSelectedItem = toSelectionListBox.SelectedItem;
+            if (tSelectedItem == null)
+            {
+                // スタート地点が指定されていない
+                toSelectionListBox.SelectedIndex = 0;
+                toName = toSelectionListBox.Items[0].ToString();
+            }
+            else
+            {
+                toName = tSelectedItem.ToString();
+            }
+
             List<string[]> routes = [];
             foreach (var route in Routes)
             {
@@ -62,10 +87,11 @@ namespace Viewer
                 routes.Add(array);
             }
 
-            DijkstraInterface.SetCsv(routes);
-            
-            string fromName = fromSelectionListBox.SelectedItem.ToString();
-            string toName = toSelectionListBox.SelectedItem.ToString();
+            string costTarget = searchModeSlider.Value.ToString();
+            CostType costType = CostTypeHandler.GetCostType(costTarget);
+
+            DijkstraInterface.SetCsv(routes, costType);
+
             DijkstraInterface.GetPath(fromName, toName);
         }
 
@@ -73,52 +99,58 @@ namespace Viewer
         {
             var openFileDialog = new OpenFileDialog
             {
-                Filter = "CSVファイル (*.csv)|*.csv|すべてのファイル (*.*)|*.*",
-                Title = "経路情報CSVファイルを選択"
+               Filter = "CSVファイル (*.csv)|*.csv|すべてのファイル (*.*)|*.*",
+               Title = "経路情報CSVファイルを選択"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
-                try
-                {
-                    var csv = CsvReader.GetCSV(openFileDialog.FileName, false);
-                    HashSet<string> locationNames = [];
-                    foreach (string[] csvRow in csv)
-                    {
-                        string fromName = csvRow[0];
-                        string toName = csvRow[1];
-                        _ = locationNames.Add(fromName);
-                        _ = locationNames.Add(toName);
-                        string transType = csvRow[2];
-                        string routeTime = csvRow[3];
-                        string routeCost = csvRow[4];
-
-                        var newRoute = new RouteEntry
-                        {
-                            FromLocation = fromName,
-                            ToLocation = toName,
-                            TransType = transType,
-                            TravelTime = int.TryParse(routeTime, out int time) ? time : 0,
-                            Cost = int.TryParse(routeCost, out int cost) ? cost : 0
-                        };
-
-                        Routes.Add(newRoute);
-                    }
-
-                    fromSelectionListBox.ItemsSource = locationNames;
-                    toSelectionListBox.ItemsSource = locationNames;
-                }
-                catch (Exception ex)
-                {
-                    string message = $"CSVインポート中にエラーが発生しました：{ex.Message}";
-                    MessageBox.Show(
-                        message,
-                        "エラー",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-                }
+               try
+               {
+                   string filePath = openFileDialog.FileName;
+                   LoadCSV(filePath);
+               }
+               catch (Exception ex)
+               {
+                   string message = $"CSVインポート中にエラーが発生しました：{ex.Message}";
+                   MessageBox.Show(
+                       message,
+                       "エラー",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+               }
             }
+        }
+
+        private void LoadCSV(string filePath)
+        {
+            var csv = CsvReader.GetCSV(filePath, false);
+            HashSet<string> locationNames = [];
+            foreach (string[] csvRow in csv)
+            {
+                string fromName = csvRow[0];
+                string toName = csvRow[1];
+                _ = locationNames.Add(fromName);
+                _ = locationNames.Add(toName);
+                string transType = csvRow[2];
+                string routeTime = csvRow[3];
+                string routeCost = csvRow[4];
+
+                var newRoute = new RouteEntry
+                {
+                    FromLocation = fromName,
+                    ToLocation = toName,
+                    TransType = transType,
+                    TravelTime = int.TryParse(routeTime, out int time) ? time : 0,
+                    Cost = int.TryParse(routeCost, out int cost) ? cost : 0
+                };
+
+                Routes.Add(newRoute);
+            }
+
+            fromSelectionListBox.ItemsSource = locationNames;
+            toSelectionListBox.ItemsSource = locationNames;
         }
     }
 

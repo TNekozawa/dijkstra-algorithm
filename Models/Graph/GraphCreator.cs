@@ -1,41 +1,78 @@
 ﻿using Models.Graph.Elements.Concrete;
+using Models.Utils;
 using System.Collections.Generic;
-
+using System;
 namespace Models.Graph
 {
     public static class GraphCreator
     {
-        public static Dictionary<int, Location> GetNodeDictionary(List<string[]> csv)
+        public static Dictionary<int, Location> GetNodeDictionary(List<string[]> csv, CostType costType)
         {
-            // TODO 枠の実装のみしかできていないので, 実装をやり直す
-            HashSet<int> nodeIdList = [];
+            // 拠点名をかぶりなしで取得する
+            HashSet<string> locationNameList = [];
             foreach (string[] row in csv)
             {
-                int id1 = int.Parse(row[0]);
-                int id2 = int.Parse(row[1]);
-                nodeIdList.Add(id1);
-                nodeIdList.Add(id2);
+                string fLocName = row[0];
+                string tLocName = row[1];
+                _ = locationNameList.Add(fLocName);
+                _ = locationNameList.Add(tLocName);
             }
 
-            Dictionary<int, Location> NodeDictionary = new();
-            foreach (int id in nodeIdList)
+            // 各拠点名にノードIDを割り振り, ノードのディクショナリを作成する
+            Dictionary<string, int> NameIdDict = [];
+            Dictionary<int, Location> NodeDictionary = [];
+            int counter = 0;
+            foreach (string locName in locationNameList)
             {
-                Location node = new(id, "");
-                NodeDictionary[id] = node;
+                Location location = new(counter, locName);
+                NodeDictionary.Add(counter, location);
+                NameIdDict.Add(locName, counter);
+                counter++;
             }
 
-            foreach (string[] row in csv)
+            foreach (string[] csvRow in csv)
             {
-                int id1 = int.Parse(row[0]);
-                int id2 = int.Parse(row[1]);
-                int cost = int.Parse(row[2]);
+                string fromName = csvRow[0];
+                int fromId = NameIdDict[fromName];
+                Location fromLocation = NodeDictionary[fromId];
 
-                Location from = NodeDictionary[id1];
-                Location to = NodeDictionary[id2];
+                string toName = csvRow[1];
+                int toId = NameIdDict[fromName];
+                Location toLocation = NodeDictionary[toId];
 
-                Route edge = new(to, cost, "");
-                from.SetEdge(edge);
+                string transType = csvRow[2];
+
+                string rawFare = csvRow[3];
+                if (int.TryParse(rawFare, out int fare))
+                {
+
+                }
+                else
+                {
+                    throw new Exception($"Fare is invalid: {rawFare}");
+                }
+
+                string rawTime = csvRow[4];
+                if (int.TryParse(rawTime, out int time))
+                {
+
+                }
+                else
+                {
+                    throw new Exception($"Time is invalid: {rawTime}");
+                }
+
+                int cost = costType switch
+                {
+                    CostType.Time => time,
+                    CostType.Fare => fare,
+                    _ => throw new Exception($"Invalid value{costType}"),
+                };
+
+                Route route = new(toLocation, cost, transType, fare, time);
+                fromLocation.SetEdge(route);
             }
+
             return NodeDictionary;
         }
     }

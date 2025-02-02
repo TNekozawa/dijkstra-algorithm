@@ -1,4 +1,5 @@
-﻿using Models.Graph;
+﻿using Models.Utils;
+using Models.Graph;
 using Models.Graph.Algorithms;
 using Models.Graph.Elements.Abstract;
 using Models.Graph.Elements.Concrete;
@@ -18,9 +19,9 @@ namespace Models
             LocNameDictionary = [];
             DijkstraAlgorithm = new();
         }
-        public void SetLocDict(List<string[]> csv)
+        public void SetLocDict(List<string[]> csv, CostType costType)
         {
-            LocationDictionary = GraphCreator.GetNodeDictionary(csv);
+            LocationDictionary = GraphCreator.GetNodeDictionary(csv, costType);
             Dictionary<int, AbstractNode> nodeDict = [];
             foreach (Location location in LocationDictionary.Values)
             {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Controller.Utils
+namespace Models.Utils
 {
     public static class CsvReader
     {
