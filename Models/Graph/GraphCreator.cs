@@ -82,6 +82,9 @@ namespace Models.Graph
                 // エッジのオブジェクトを生成し, fromのNodeにエッジをセットする
                 Route route = new(toLocation, cost, transType, fare, time);
                 fromLocation.SetEdge(route);
+                // 無向グラフにするため, 反対方向のEdgeを生成してToNodeにセットする
+                Route invRoute = new Route(fromLocation, cost, transType, fare, time);
+                toLocation.SetEdge(invRoute);
             }
 
             return NodeDictionary;
