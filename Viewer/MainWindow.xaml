@@ -43,7 +43,7 @@
                          VerticalContentAlignment="Center"
                          Text="交通手段"/>
 
-                <TextBox x:Name="costTextBox"
+                <TextBox x:Name="fareTextBox"
                          Width="90"
                          Margin="5"
                          VerticalContentAlignment="Center"
@@ -84,7 +84,7 @@
                                     Binding="{Binding TransportationType}"
                                     Width="Auto"/>
                 <DataGridTextColumn Header="費用(円)"
-                                    Binding="{Binding Cost}"
+                                    Binding="{Binding Fare}"
                                     Width="Auto"/>
                 <DataGridTextColumn Header="所要時間(分)"
                                     Binding="{Binding TravelTime}"
@@ -140,7 +140,7 @@
         <!-- 結果表示 -->
         <RichTextBox Grid.Row="3"
                      x:Name="resultRichTextBox"
-                     IsReadOnly="True"
+                     IsReadOnly="False"
                      VerticalScrollBarVisibility="Auto"/>
     </Grid>
 </Window>

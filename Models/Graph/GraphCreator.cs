@@ -30,18 +30,23 @@ namespace Models.Graph
                 counter++;
             }
 
+            // 各拠点間のエッジを作成し, 各拠点に紐づける
             foreach (string[] csvRow in csv)
             {
+                // 出発地点のオブジェクトを取得する
                 string fromName = csvRow[0];
                 int fromId = NameIdDict[fromName];
                 Location fromLocation = NodeDictionary[fromId];
 
+                // 到着地点のオブジェクトを取得する
                 string toName = csvRow[1];
-                int toId = NameIdDict[fromName];
+                int toId = NameIdDict[toName];
                 Location toLocation = NodeDictionary[toId];
 
+                // 交通手段を取得する
                 string transType = csvRow[2];
 
+                // 運賃の生データを取得し, intに変換する
                 string rawFare = csvRow[3];
                 if (int.TryParse(rawFare, out int fare))
                 {
@@ -49,9 +54,11 @@ namespace Models.Graph
                 }
                 else
                 {
+                    // intに変換できないので例外
                     throw new Exception($"Fare is invalid: {rawFare}");
                 }
 
+                // 時間の生データを取得し, intに変換する
                 string rawTime = csvRow[4];
                 if (int.TryParse(rawTime, out int time))
                 {
@@ -59,9 +66,12 @@ namespace Models.Graph
                 }
                 else
                 {
+                    // intに変換できないので例外
                     throw new Exception($"Time is invalid: {rawTime}");
                 }
 
+                // 計算ターゲットのコストをセットする
+                // 時間で計算するor運賃で計算する
                 int cost = costType switch
                 {
                     CostType.Time => time,
@@ -69,6 +79,7 @@ namespace Models.Graph
                     _ => throw new Exception($"Invalid value{costType}"),
                 };
 
+                // エッジのオブジェクトを生成し, fromのNodeにエッジをセットする
                 Route route = new(toLocation, cost, transType, fare, time);
                 fromLocation.SetEdge(route);
             }

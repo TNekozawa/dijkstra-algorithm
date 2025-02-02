@@ -32,11 +32,50 @@ namespace Models
             }
             DijkstraAlgorithm.SetNodeDict(nodeDict);
         }
-        public void Process(string fromLocation, string toLocation)
+        public (List<Location>, List<Route>) Process(string fromLocation, string toLocation)
         {
+            // 出発地点のIdと目的地のIdを取得し, Dijkstra法を実行する
             int startId = LocNameDictionary[fromLocation];
             int endId = LocNameDictionary[toLocation];
             DijkstraAlgorithm.Process(startId, endId);
+
+            // 逆探査を行う
+            (List<Location>, List<Route>) result = BackPropagate(endId);
+            return result;
+        }
+
+        private (List<Location>, List<Route>) BackPropagate(int endId)
+        {
+            List<Location> locations = [];
+            List<Route> routes = [];
+
+            // 目的地を取得する
+            Location dst = LocationDictionary[endId];
+            // 逆探査を行い, 逆順でリストに格納する
+            locations.Add(dst);
+            Location? prev = dst.PreviousNode as Location;
+            Route? route = dst.PreviousEdge as Route;
+
+            if (route != null)
+            {
+                routes.Add(route);
+            }
+            while (prev != null)
+            {
+                locations.Add(prev);
+                route = prev.PreviousEdge as Route;
+                if (route != null)
+                {
+                    routes.Add(route);
+                }
+                prev = prev.PreviousNode as Location;
+            }
+
+            // リストを逆順にする
+            locations.Reverse();
+            routes.Reverse();
+
+            return (locations, routes);
         }
     }
 }

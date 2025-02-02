@@ -9,7 +9,7 @@ namespace Models.Graph.Elements.Abstract
         public double Cost { get; private set; }
         public bool IsDecided { get; private set; }
         public AbstractNode? PreviousNode { get; private set; } = null;
-
+        public AbstractEdge? PreviousEdge { get; private set; } = null;
         public List<AbstractEdge> EdgeList { get; private set; } = [];
 
         public void SetEdge(AbstractEdge edge)
@@ -30,6 +30,11 @@ namespace Models.Graph.Elements.Abstract
         public void SetPreviousNode(AbstractNode? node)
         {
             PreviousNode = node;
+        }
+
+        public void SetPreviousEdge(AbstractEdge edge)
+        {
+            PreviousEdge = edge;
         }
 
         public int CompareTo(AbstractNode? other)

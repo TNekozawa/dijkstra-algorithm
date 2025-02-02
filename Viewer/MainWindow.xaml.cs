@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Documents;
 
 namespace Viewer
 {
@@ -32,8 +33,8 @@ namespace Viewer
                 FromLocation = fromLocationTextBox.Text,
                 ToLocation = toLocationTextBox.Text,
                 TransType = transportationTypeTextBox.Text,
+                Fare = int.TryParse(fareTextBox.Text, out int cost) ? cost : 0,
                 TravelTime = int.TryParse(timeTextBox.Text, out int time) ? time : 0,
-                Cost = int.TryParse(costTextBox.Text, out int cost) ? cost : 0
             };
 
             Routes.Add(newRoute);
@@ -43,7 +44,7 @@ namespace Viewer
             toLocationTextBox.Clear();
             transportationTypeTextBox.Clear();
             timeTextBox.Clear();
-            costTextBox.Clear();
+            fareTextBox.Clear();
         }
 
         private void SearchRoute_Click(object sender, RoutedEventArgs e)
@@ -81,8 +82,8 @@ namespace Viewer
                 array[0] = route.FromLocation.ToString();
                 array[1] = route.ToLocation.ToString();
                 array[2] = route.TransType.ToString();
-                array[3] = route.TravelTime.ToString();
-                array[4] = route.Cost.ToString();
+                array[3] = route.Fare.ToString();
+                array[4] = route.TravelTime.ToString();
 
                 routes.Add(array);
             }
@@ -92,34 +93,49 @@ namespace Viewer
 
             DijkstraInterface.SetCsv(routes, costType);
 
-            DijkstraInterface.GetPath(fromName, toName);
+            List<string> resultList = DijkstraInterface.GetPath(fromName, toName);
+            resultRichTextBox.Document.Blocks.Clear();
+            if (resultList.Count > 0)
+            {
+                string display = "";
+                foreach (string result in resultList)
+                {
+                    display += result + "\r\n";
+                }
+                Run run = new (display);
+                resultRichTextBox.Document.Blocks.Add(new Paragraph(run));
+            }
+            else
+            {
+                resultRichTextBox.AppendText("No route");
+            }
         }
 
         private void ImportCsv_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
-               Filter = "CSVファイル (*.csv)|*.csv|すべてのファイル (*.*)|*.*",
-               Title = "経路情報CSVファイルを選択"
+                Filter = "CSVファイル (*.csv)|*.csv|すべてのファイル (*.*)|*.*",
+                Title = "経路情報CSVファイルを選択"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
-               try
-               {
-                   string filePath = openFileDialog.FileName;
-                   LoadCSV(filePath);
-               }
-               catch (Exception ex)
-               {
-                   string message = $"CSVインポート中にエラーが発生しました：{ex.Message}";
-                   MessageBox.Show(
-                       message,
-                       "エラー",
-                       MessageBoxButton.OK,
-                       MessageBoxImage.Error
-                   );
-               }
+                try
+                {
+                    string filePath = openFileDialog.FileName;
+                    LoadCSV(filePath);
+                }
+                catch (Exception ex)
+                {
+                    string message = $"CSVインポート中にエラーが発生しました：{ex.Message}";
+                    MessageBox.Show(
+                        message,
+                        "エラー",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
             }
         }
 
@@ -134,16 +150,16 @@ namespace Viewer
                 _ = locationNames.Add(fromName);
                 _ = locationNames.Add(toName);
                 string transType = csvRow[2];
-                string routeTime = csvRow[3];
-                string routeCost = csvRow[4];
+                string routeFare = csvRow[3];
+                string routeTime = csvRow[4];
 
                 var newRoute = new RouteEntry
                 {
                     FromLocation = fromName,
                     ToLocation = toName,
                     TransType = transType,
-                    TravelTime = int.TryParse(routeTime, out int time) ? time : 0,
-                    Cost = int.TryParse(routeCost, out int cost) ? cost : 0
+                    Fare = int.TryParse(routeFare, out int cost) ? cost : 0,
+                    TravelTime = int.TryParse(routeTime, out int time) ? time : 0
                 };
 
                 Routes.Add(newRoute);
@@ -201,14 +217,14 @@ namespace Viewer
             }
         }
 
-        private int _cost;
-        public int Cost
+        private int _fare;
+        public int Fare
         {
-            get => _cost;
+            get => _fare;
             set
             {
-                _cost = value;
-                OnPropertyChanged(nameof(Cost));
+                _fare = value;
+                OnPropertyChanged(nameof(Fare));
             }
         }
 

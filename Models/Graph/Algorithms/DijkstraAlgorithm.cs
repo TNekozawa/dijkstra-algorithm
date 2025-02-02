@@ -59,6 +59,7 @@ namespace Models.Graph.Algorithms
                         {
                             next.SetCost(nowCost + edgeCost);
                             next.SetPreviousNode(node);
+                            next.SetPreviousEdge(edge);
                         }
                         else
                         {
